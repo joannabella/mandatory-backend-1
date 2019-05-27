@@ -1,6 +1,9 @@
 const app = require('express')();
+var cors = require('cors')
 const http = require('http').Server(app)
 const io = require('socket.io')(http);
+
+app.use(cors())
 
 app.get('/', function(req, res) {
     res.send('<p>Hello world</p>');

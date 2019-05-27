@@ -7,18 +7,19 @@ function Sidebar() {
 
     useEffect(() => {
         async function getRooms() {
-            await axios.get('http://localhost:8000/rooms')
+            return axios.get('http://localhost:8000/rooms')
         }
 
-        getRooms().then(rooms => setData({
-            rooms: rooms
+        getRooms().then(response => setData({
+            rooms: response.data
         }))
     });
+
 
     return (
         <ul>
             {data.rooms.map(room => {
-                return <SidebarItem />;
+                return <SidebarItem room={room} />;
             })}
         </ul>
     );

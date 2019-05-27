@@ -1,9 +1,9 @@
 import React from 'react';
 
-function SidebarItem() {
+function SidebarItem(props) {
     return (
         <li>
-            
+            {props.room.name}
         </li>
     );
 }
