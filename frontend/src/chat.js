@@ -122,7 +122,7 @@ class Chat extends Component {
             <ul className='chat-list'>
               {this.state.messages.length === 0 ? <Message username={'admin'} content={'Be the first one to start a conversation'} /> : null}
               {this.state.messages.map(message => {
-                return <Message myUsername={this.state.username} username={message.username} timestamp={getTime(message.timestamp)} content={message.content} key={message.timestamp} tail={message.tail} /> 
+                return <Message myUsername={this.state.username} username={message.username} timestamp={getTime(message.timestamp)} content={message.content} key={message.timestamp} /> 
               })}
             </ul>
           </ScrollToBottom>

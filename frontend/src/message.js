@@ -57,7 +57,7 @@ class message extends Component {
         <span className='message-username'>{this.props.username}</span>
         <span className='message-timestamp'>{this.props.timestamp}</span>
         <MessageContent>{this.props.content}</MessageContent>
-        <span className={'tail ' + tailClass}>{this.props.tail}</span>
+        <span className={'tail ' + tailClass}></span>
       </li>
     )
   }
