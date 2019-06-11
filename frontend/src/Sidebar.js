@@ -10,7 +10,6 @@ function Sidebar() {
 
     const createRoom = (event) => {
         event.preventDefault();
-        console.log('creating room');
         axios.post('http://localhost:8000/rooms', {
             name: data.newRoom
         })
@@ -19,16 +18,14 @@ function Sidebar() {
                 rooms: [...data.rooms],
                 newRoom: ''
             })
-            loadRooms()
+            loadRooms();
         })
     }
 
     const loadRooms = () => {
-
         return axios.get('http://localhost:8000/rooms')
             .then(response => setData({
                 rooms: response.data
-                
             }))    
     }
 
@@ -47,7 +44,7 @@ function Sidebar() {
             <div className='navbar-menu-container'>
                 <ul className='navbar-menu'>
                     {data.rooms.map(room => {
-                        return <SidebarItem room={room} key={room.name} onDelete={() => loadRooms()} />;
+                        return <SidebarItem room={room} key={room.name} onDelete={() => loadRooms()} />
                     })}
                 </ul>
             </div>

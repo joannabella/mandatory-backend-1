@@ -171,7 +171,7 @@ p {
 .remove-room-button {
   background-color: transparent;
   position: relative;
-  top: 1px;
+  top: 2px;
   border: none;
   cursor: pointer;
   outline: none;

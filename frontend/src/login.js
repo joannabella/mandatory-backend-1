@@ -43,9 +43,16 @@ class Login extends Component {
      <div className='login-window login-tail'>  
         <form className='login-form'>
           <h1 className='login-welcome'>Talkative</h1>
-          <label className='login-title' htmlFor='username'>Pick your username</label>  
+          <label className='login-title' htmlFor='pickusername'>Pick your username</label>  
           <p className='login-error' style={{ color: this.state.color }}>{this.state.infoMessage}</p>
-          <input className='userfield' name='pickusername' onChange={this.onChange} value={this.state.username} name='username' placeholder='Username' spellCheck='false'></input>  
+          <input 
+            className='userfield' 
+            name='pickusername' 
+            onChange={this.onChange} 
+            value={this.state.username} 
+            placeholder='Username' 
+            spellCheck='false'></input>  
+
           <label className='userinput' htmlFor='pickusername'></label>  
           <button className='login-button' type='submit' onClick={this.login}>Login</button>
         </form>

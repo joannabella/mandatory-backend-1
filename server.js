@@ -16,23 +16,28 @@ const SOCKET_EVENT = {
     NEW_MESSAGE: 'new_message',
 };
 
-function createRoom(name) {
-    try {
-        fs.mkdirSync(STORAGE_ROOT + '/' + name);
-        //fs.writeFil
-    }
-    catch(error) {
-
-    }
+function createRoom(name, callback) {
+    fs.mkdir(STORAGE_ROOT + '/' + name, callback);
 }
 
 function createMessage(room, username, content) {
     const timestamp = (+ new Date());
     const message = {'username': username, 'timestamp': timestamp, 'content': content};
     const fileContent = JSON.stringify(message);
-    fs.writeFileSync(STORAGE_ROOT + '/' + room + '/' + timestamp + '.json', fileContent);
-    io.emit(SOCKET_EVENT.NEW_MESSAGE, message);
-    console.log(message.username);
+    fs.writeFile(STORAGE_ROOT + '/' + room + '/' + timestamp + '.json', fileContent, () => {
+        io.emit(SOCKET_EVENT.NEW_MESSAGE, message);
+    });
+}
+
+function readJSONFile(path) {
+    return new Promise((resolve, reject) => {
+        fs.readFile(path, 'utf8', (error, fileContent) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(JSON.parse(fileContent));
+        });
+    }); 
 }
 
 app.get('/', function(req, res) {
@@ -40,21 +45,23 @@ app.get('/', function(req, res) {
 });
 
 app.get('/rooms', function(req, res) {
-    const files = fs.readdirSync(STORAGE_ROOT);
-    const rooms = files.map(file => {
-      return { name: file };  
+    fs.readdir(STORAGE_ROOT, (error, files) => {
+        const rooms = files.map(file => {
+            return { name: file };  
+          });
+        res.status(200).json(rooms);
     });
-    res.json(rooms);
 });
 
 app.get('/rooms/:name/messages', function(req, res) {
-    const files = fs.readdirSync(STORAGE_ROOT + '/' + req.params.name);
-    const messages = files.map(file => {
-        const fileContent = fs.readFileSync(STORAGE_ROOT + '/' + req.params.name + '/' + file, 'utf8');
-        return JSON.parse(fileContent);
+    fs.readdir(STORAGE_ROOT + '/' + req.params.name, (error, files) => {
+        const promises = files.map(file => {
+            return readJSONFile(STORAGE_ROOT + '/' + req.params.name + '/' + file, 'utf8');
+        });
+        Promise.all(promises).then(function(messages) {
+            res.status(200).json(messages);
+        }) 
     });
-    res.json(messages);
-    res.status(200).end();
 });
 
 app.post('/rooms', function(req, res) {
@@ -62,8 +69,9 @@ app.post('/rooms', function(req, res) {
         res.status(400).end();
         return;
     }
-    createRoom(req.body.name);
-    res.json(req.body);
+    createRoom(req.body.name, () => {
+        res.status(201).json(req.body);
+    });
 });
 
 app.post('/rooms/:name/message', function(req, res) {
@@ -72,32 +80,33 @@ app.post('/rooms/:name/message', function(req, res) {
         return;
     }
     createMessage(req.params.name, req.body.username, req.body.content);
-    res.status(200).end();
+    res.status(201).end();
 });
 
 app.delete('/rooms/:name', function(req, res) {
     let name = req.params.name;
-    del.sync(STORAGE_ROOT + '/' + name);
-    res.status(200).end();
+    del(STORAGE_ROOT + '/' + name).then(() => {
+        res.status(200).end();
+    });
 });
 
 io.on('connection', function(socket) {
     socket.on(SOCKET_EVENT.SEND_MESSAGE, function(message) {
-        console.log(message);
         createMessage(message.room, message.username, message.content);
     });
-    
 });
 
+
+// Using so that the server does not start before STORAGE_ROOT has been created
 try {
     fs.mkdirSync(STORAGE_ROOT);
-}
+} 
 catch(error) {
 
 }
 
-createRoom('general');
-createRoom('random');
+createRoom('general', () => {});
+createRoom('random', () => {});
 
 
 http.listen(8000, function() {  

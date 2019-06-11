@@ -13,10 +13,6 @@ const MessageContent = (props) => {
     }
  } 
 
- let heart = /:heart:/;
- let heartEyes = /:heart_eyes:/;
- let joy = /:joy:/;
-
  let allEmojis = {
    ':heart:': '❤️',
    ':joy:': '😂',

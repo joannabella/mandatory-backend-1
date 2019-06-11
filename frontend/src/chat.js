@@ -53,13 +53,10 @@ class Chat extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     this.loadMessages(nextProps.match.params.name);
   }
 
   loadMessages(roomName) {
-    console.log(roomName);
-
     this.setState({ messages: [] });
     axios.get(`http://localhost:8000/rooms/${roomName}/messages`)
       .then((response) => {
