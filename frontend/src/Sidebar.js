@@ -32,7 +32,7 @@ function Sidebar() {
     useEffect(() => {
        loadRooms();
     }, []);
-
+    
     return (
         <nav className='navbar-rooms'>
             <form onSubmit={createRoom}>

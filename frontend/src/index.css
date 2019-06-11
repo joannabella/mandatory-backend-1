@@ -222,6 +222,10 @@ p {
   color: #f6ac32;
 }
 
+a.active {
+  color: #fff;
+}
+
 .chat-header {
   display: inline-block;
   margin-bottom: -45px;
