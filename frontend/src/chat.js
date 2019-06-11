@@ -41,7 +41,10 @@ class Chat extends Component {
     }); 
 
     this.socket.on('new_message', message => {
-      this.setState({messages: [...this.state.messages, message], users: [...this.state.users, message.username]});
+      if (!this.state.users.includes(message.username)) {
+        this.setState({ users: [...this.state.users, message.username] });
+      }
+      this.setState({ messages: [...this.state.messages, message] });
     });
     
     this.loadMessages(this.props.match.params.name);
